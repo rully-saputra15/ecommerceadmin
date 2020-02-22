@@ -25,4 +25,9 @@ class Transaksi {
 		$query = $this->db->query("SELECT sum(jumlah_beli) as nilai from transaksi");
 		return $query->getResult();
 	}
+	public function detail_transaksi($id)
+	{
+		$query = $this->db->query("SELECT a.ID as ID,c.nama_barang as nama_barang,b.nama as nama_pembeli, a.jumlah_beli as jumlah_beli , a.jenis_pembayaran as pembayaran, a.total_harga as total_harga,b.alamat as alamat FROM transaksi a, users b, barang c WHERE a.ID_user = b.ID AND a.ID_barang = c.ID AND a.ID = '$id'");
+		return $query->getResult();
+	}
 }

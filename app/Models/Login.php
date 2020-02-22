@@ -10,8 +10,8 @@ use CodeIgniter\Database\ConnectionInterface;
 			$this->db = $db = \Config\Database::connect();
 	}
 	public function check($username,$password){
-		$query = $this->db->query("SELECT * FROM users WHERE username='%s' && password='%s'",$username,$password);
-		return $query->num_rows();
+		$query = $this->db->query("SELECT username FROM admin WHERE username='$username' AND password='$password'");
+		return $query->getRow();
 
 	}
  }

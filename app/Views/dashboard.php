@@ -66,6 +66,7 @@
 			</div>
 		  </div>
 		  <div class="container">
+			<label>Upload file excel untuk mengubah data</label>
 		  	<form class="form-horizontal" method="post" action="<?php echo $baseURL?>dashboard/upload" name="uploadCSV" enctype="multipart/form-data">
 			  <input type="file" name="file" id="file" accept=".xlsx">
 			  <button class="btn btn-primary" id="submit" name="import">Import</button>
@@ -78,14 +79,22 @@
 						<th scope="col">No</th>
 						<th scope="col">ID Barang</th>
 						<th scope="col">Nama Barang</th>
-						<th scope="col">Jumlah Barang Terjual</th>
+						<th scope="col">Jumlah Barang</th>
 						<th scope="col">Tindakan</th>
 					</tr>
 				</thead>
 				<tbody>
-				<?php $i=1 ?>
+				<?php $i=1;$class=null; ?>
 				<?php foreach ($row as $item):?>
-					<tr>
+					<?php if($item->stok_barang >= 25) {
+							$class= 'table-primary';
+						}else if($item->stok_barang > 10 and $item->stok_barang < 25){
+							$class='table-warning';
+						}else{
+							$class='table-danger';
+						}
+					?>
+					<tr class='<?php echo $class?>'>
 						<th scope="row"><?=$i?></th>
 						<td><?= $item->ID?></td>
 						<td><?= $item->nama_barang?></td>

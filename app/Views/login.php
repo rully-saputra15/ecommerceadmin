@@ -15,10 +15,10 @@
     </div>
 
     <!-- Login Form -->
-    <form action="<?php echo $baseURL ?>dashboard/login" method="post">
+    <form action="<?php echo $baseURL . 'dashboard/login'?>" method="post">
       <input type="text" id="login" class="fadeIn second" name="username" placeholder="username">
       <input type="text" id="password" class="fadeIn third" name="password" placeholder="password">
-      <input type="submit" class="fadeIn fourth" value="Log In">
+      <input type="submit" name="submit" class="fadeIn fourth" value="Log In">
     </form>
 
     <!-- Remind Passowrd -->
