@@ -4,29 +4,34 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>asset/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>asset/css/dashboard.css">
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js"integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="crossorigin="anonymous"></script>
 
+		<script src="<?php echo base_url(); ?>asset/js/bootstrap.js"></script>
+		<script>
+			$('#addModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget) // Button that triggered the modal
+			var recipient = button.data('whatever') // Extract info from data-* attributes
+			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			var modal = $(this)
+			modal.find('.modal-title').text('New message to ' + recipient)
+			modal.find('.modal-body input').val(recipient)
+			});
+		</script>
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-			<a class="navbar-brand" href="#">Navbar</a>
+			<a class="navbar-brand" href="#">Admin</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     			<span class="navbar-toggler-icon"></span>
   			</button>
 		<div class="collapse navbar-collapse" id="navbarNav">
     		<ul class="navbar-nav ml-auto">
       				<li class="nav-item active">
-        				<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        				<a class="nav-link" href="<?php echo $baseURL . 'insight'?>">Home <span class="sr-only">(current)</span></a>
       				</li>
-					<li class="dropdown">
-					<button class="dropbtn">
-					  <i class="fa fa-bell" style="font-size:20px;" aria-hidden="true"></i>
-      				</button>
-					  <div class="dropdown-content">
-						<?php foreach ($notif as $item) :?>
-						<a href="<?php echo $baseURL?>notif/<?php echo $item->ID?>"><?='<b>' .$item->nama .'</b>'. ' membeli '.'<b>' .$item->jumlah_beli .'</b>'. ' ' .'<b>'. $item->nama_barang .'</b>'?></a>
-						<?php endforeach;?>
-						<a href="<?php echo $baseURL?>seeMoreTransaksi">See More</a>
-					  </div>
+					<li class="nav-item">
+						<a class="nav-link" href="<?php echo $baseURL . 'dashboard/transaksi'?>">Transaksi</span></a>
 					</li>
       				<li class="nav-item">
         				<a class="nav-link" href="#">Users</a>
@@ -66,12 +71,65 @@
 			</div>
 		  </div>
 		  <div class="container">
-			<label>Upload file excel untuk mengubah data</label>
-		  	<form class="form-horizontal" method="post" action="<?php echo $baseURL?>dashboard/upload" name="uploadCSV" enctype="multipart/form-data">
-			  <input type="file" name="file" id="file" accept=".xlsx">
-			  <button class="btn btn-primary" id="submit" name="import">Import</button>
-			</form>
+		  <div class="row">
+				<div class="col">
+		  		<form class="form-horizontal" method="post" action="upload" name="uploadCSV" enctype="multipart/form-data">
+				  <label><b>Upload file excel untuk mengubah data</b></label>
+			  		<input type="file" name="file" id="file" accept=".xlsx">
+			  		<button class="btn btn-primary" id="submit" name="import">Import</button>
+				</form>
+				</div>
+				<div class="col">
+					<label><b>Untuk menambah barang baru</b></label><br>
+					<button class="btn btn-primary" data-toggle="modal" data-target="#addModal" data-whatever="@add">Add Barang</button>
+				</div>
 		  </div>
+		  </div>
+					<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Add Barang</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form action="addBarang" method="post">
+					<div class="form-group">
+						<label for="nama-barang" class="col-form-label">Nama Barang : </label>
+						<input type="text" class="form-control" id="nama-barang" name="nama-barang">
+					</div>
+					<div class="form-group">
+						<label for="message-text" class="col-form-label">Foto Barang:</label>
+						<input type="file" class="form-control" id="foto-barang" name="foto-barang" accept="image/*"></input>
+					</div>
+					<div class="form-group">
+						<label for="recipient-name" class="col-form-label">Harga :</label>
+						<input type="text" class="form-control" id="harga" name="harga">
+					</div>
+					<div class="form-group">
+						<label for="message-text" class="col-form-label">Stok:</label>
+						<input type="text" class="form-control" id="stok" name="stok">
+					</div>
+					<div class="form-group">
+						<label for="message-text" class="col-form-label">Kondisi :</label>
+						<input type="text" class="form-control" id="kondisi" name="kondisi">
+					</div>
+					<div class="form-group">
+						<label for="message-text" class="col-form-label">Deskripsi:</label>
+						<textarea class="form-control" id="deskripsi" name="deskripsi"></textarea>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" id="submit" name="submit">Submit</button>
+					</div>
+				</form>
+				</div>
+
+				</div>
+			</div>
+			</div>
 		  <div class="container-sm table-responsive mt-4">
 		  	<table class="table table-sm table-striped">
 				<thead>

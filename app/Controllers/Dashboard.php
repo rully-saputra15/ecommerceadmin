@@ -9,11 +9,12 @@ $model = null;
 $model_login = null;
 $transaksi = null;
 $encrypter = null;
-
+$message = null;
 class Dashboard extends BaseController{
 
 	public function __construct(){
 		//parent::__construct();
+		helper('form');
 		$this->model = new Barang();
 		$this->model_login = new Login();
 		$this->transaksi = new Transaksi();
@@ -21,28 +22,54 @@ class Dashboard extends BaseController{
 	}
 	public function index()
 	{
-		echo view('login');
+		//echo view('login',['message'=>$this->message]);
+		$row = $this->model->check();
+		$data_transaksi = $this->transaksi->show();
+		$data_barang_terjual = $this->transaksi->jumlah_barang_terjual();
+		echo view('dashboard',['row' => $row,'notif'=>$data_transaksi,'jumlah_barang_terjual' => $data_barang_terjual[0]->nilai]);
 	}
 	public function login()
 	{
 		if(isset($_POST['submit'])){
 			$username = $_POST['username'];
 			$password = $_POST['password'];
-			$ivlen = openssl_cipher_iv_length('aes-256-ctr');
-			$iv = '1234567890123456';
-			$ciphertext = base64_encode(openssl_encrypt($password,'aes-256-ctr','256', OPENSSL_RAW_DATA,$iv));
-			$num = $this->model_login->check($username,$ciphertext);
-			if($num->username == $username){
-				$row = $this->model->check();
-				$data_transaksi = $this->transaksi->show();
-				$data_barang_terjual = $this->transaksi->jumlah_barang_terjual();
-				echo view('dashboard',['row' => $row,'notif'=>$data_transaksi,'jumlah_barang_terjual' => $data_barang_terjual[0]->nilai]);
-			}
-			else{
+			if($username == '' && $password == ''){
+				$message = 'Username dan Password salah!';
 				echo view('login');
+			}else{
+				$ivlen = openssl_cipher_iv_length('aes-256-ctr');
+				$iv = '1234567890123456';
+				$ciphertext = base64_encode(openssl_encrypt($password,'aes-256-ctr','256', OPENSSL_RAW_DATA,$iv));
+				$num = $this->model_login->check($username,$ciphertext);
+				if($num->username == $username){
+					$row = $this->model->check();
+					$data_transaksi = $this->transaksi->show();
+					$data_barang_terjual = $this->transaksi->jumlah_barang_terjual();
+					echo view('dashboard',['row' => $row,'notif'=>$data_transaksi,'jumlah_barang_terjual' => $data_barang_terjual[0]->nilai]);
+				}
+				else{
+					$message = 'Username dan Password salah!';
+					echo view('login');
+				}
 			}
+
 		}else{
+			$message = 'Username dan Password salah!';
 			echo view('login');
+		}
+	}
+	public function addBarang()
+	{
+		if(isset($_POST['submit'])){
+			$nama_barang = $_POST['nama-barang'];
+			$foto_barang = $_POST['foto-barang'];
+			$harga = $_POST['harga'];
+			$stok = $_POST['stok'];
+			$kondisi = $_POST['kondisi'];
+			$deskripsi = $_POST['deskripsi'];
+
+			$addBarang = $this->model->addBarang($nama_barang,$foto_barang,$harga,$stok,$kondisi,$deskripsi);
+			print_r($addBarang);
 		}
 	}
 	public function upload()
@@ -62,16 +89,22 @@ class Dashboard extends BaseController{
 			echo "belum masuk";
 		}
 			$row = $this->model->check();
-			echo view('dashboard',['row' => $row]);
+			$detail_transaksi = $this->transaksi->detail_transaksi($id);
+			echo view('dashboard',['row' => $row,'notif'=>$detail_transaksi,'jumlah_barang_terjual' => $data_barang_terjual[0]->nilai]);
 	}
 	public function notif($id)
 	{
 		$detail_transaksi = $this->transaksi->detail_transaksi($id);
 		echo view('detail-transaksi',['data'=>$detail_transaksi]);
 	}
-	public function seeMoreTransaksi()
+	public function insight(){
+		$data_insight = $this->transaksi->insight();
+		echo view('insight',['data' => $data_insight]);
+	}
+	public function transaksi()
 	{
-		echo view('transaksi');
+		$data_transaksi = $this->transaksi->show();
+		echo view('transaksi',['data' => $data_transaksi]);
 	}
 }
 ?>

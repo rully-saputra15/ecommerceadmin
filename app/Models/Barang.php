@@ -31,6 +31,11 @@ class Barang {
 		$this->$builder->where('ID',$sql[1]);
 		$this->$builder->update();
 	}
+	public function addBarang($nama_barang,$foto_barang,$harga,$stok,$kondisi,$deskripsi)
+	{
+		$query = $this->db->query("INSERT INTO barang(foto,nama_barang,jumlah_terjual,stok_barang,harga,berat,kondisi,deskrpsi,rating) VALUES('$foto_barang','$nama_barang',0,$stok,$harga,50,'BARU','$deskripsi',0)");
+		return $query->error();
+	}
 
 }
 ?>
