@@ -16,7 +16,7 @@ class Transaksi {
 	public function show()
 	{
 		$query = $this->db->query("SELECT a.waktu 'waktu',DATEDIFF(NOW(),a.waktu)'selisih_waktu', a.ID 'ID',b.nama 'nama',a.jumlah_beli'jumlah_beli',c.nama_barang'nama_barang'
-		FROM transaksi a, users b,barang c WHERE a.ID_user = b.ID AND a.ID_barang = c.ID
+		FROM transaksi a, users b,barang c WHERE a.ID_user = b.ID AND a.ID_barang = c.ID AND a.status = 0
 		ORDER BY 2 ASC");
 		return $query->getResult();
 		//$query = $this->db->query("SELECT * FROM transaksi");
@@ -38,6 +38,17 @@ class Transaksi {
 		WHERE a.ID_barang = b.ID
 		GROUP BY MONTH(a.waktu)
 		ORDER BY MONTH(a.waktu) asc;");
+		return $query->getResult();
+	}
+	public function transaksiSukses()
+	{
+		$query = $this->db->query("SELECT a.waktu 'waktu',DATEDIFF(NOW(),a.waktu)'selisih_waktu', a.ID 'ID',b.nama 'nama',a.jumlah_beli'jumlah_beli',c.nama_barang'nama_barang'
+		FROM transaksi a, users b,barang c WHERE a.ID_user = b.ID AND a.ID_barang = c.ID AND a.status = 1
+		ORDER BY 2 ASC");
+		return $query->getResult();
+	}
+	public function changeStatus($id){
+		$query = $this->db->query("UPDATE transaksi SET status = 1 WHERE ID = '$id'");
 		return $query->getResult();
 	}
 }

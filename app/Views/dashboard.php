@@ -21,17 +21,17 @@
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-			<a class="navbar-brand" href="#">Admin</a>
+			<a class="navbar-brand" href="<?php echo base_url() . 'public/dashboard'?>">Admin</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     			<span class="navbar-toggler-icon"></span>
   			</button>
 		<div class="collapse navbar-collapse" id="navbarNav">
     		<ul class="navbar-nav ml-auto">
       				<li class="nav-item active">
-        				<a class="nav-link" href="<?php echo $baseURL . 'insight'?>">Home <span class="sr-only">(current)</span></a>
+        				<a class="nav-link" href="<?php echo base_url() . 'public/dashboard/insight'?>">Insight <span class="sr-only">(current)</span></a>
       				</li>
 					<li class="nav-item">
-						<a class="nav-link" href="<?php echo $baseURL . 'dashboard/transaksi'?>">Transaksi</span></a>
+						<a class="nav-link" href="<?php echo base_url(). 'public/dashboard/transaksi'?>">Transaksi</span></a>
 					</li>
       				<li class="nav-item">
         				<a class="nav-link" href="#">Users</a>

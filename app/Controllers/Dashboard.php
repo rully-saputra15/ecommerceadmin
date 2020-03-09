@@ -106,5 +106,22 @@ class Dashboard extends BaseController{
 		$data_transaksi = $this->transaksi->show();
 		echo view('transaksi',['data' => $data_transaksi]);
 	}
+	public function transaksiSukses()
+	{
+		if(isset($_POST['selesai'])){
+			$data_transaksi = $this->transaksi->transaksiSukses();
+			echo view('transaksi',['data'=>$data_transaksi]);
+		}else{
+			$data_transaksi = $this->transaksi->show();
+			echo view('transaksi',['data'=>$data_transaksi]);
+		}
+
+	}
+	public function changeStatus($id){
+		$result = $this->transaksi->changeStatus($id);
+		$row = $this->model->check();
+		$detail_transaksi = $this->transaksi->detail_transaksi($id);
+		echo view('dashboard',['row' => $row,'notif'=>$detail_transaksi,'jumlah_barang_terjual' => $data_barang_terjual[0]->nilai]);
+	}
 }
 ?>

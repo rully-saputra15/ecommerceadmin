@@ -2,7 +2,7 @@
 	<head>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>asset/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>asset/css/detail-transaksi.css">
 	</head>
 	<body>
 		<div class="container border">
@@ -44,11 +44,24 @@
 					</tr>
 					<tr>
 						<td colspan="2">Status</td>
-						<td><b>LUNAS</b></td>
+						<td><b><?php if($row->status == 0){
+							echo 'BELUM SELESAI';
+						}else{
+							echo 'SELESAI';
+						}
+						?></b></td>
 					</tr>
 				  </tbody>
-			<?php endforeach;?>
+
 			</table>
+			<div class="form-group">
+			<button class="btn btn-primary">
+			<a href="<?php echo base_url() . 'public/dashboard/transaksi'?>">BACK
+			</button>
+			</a>
+			<button class="btn btn-success"><a href="<?php echo base_url() . 'public/dashboard/changeStatus/' . $row->ID ?>">CHECKOUT</a></button>
+			</div>
 		</div>
+		<?php endforeach;?>
 	</body>
 </html>
