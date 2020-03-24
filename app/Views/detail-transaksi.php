@@ -10,11 +10,18 @@
     		<h1>Receipt</h1>
   		</div>
 		<?php
-		setlocale (LC_TIME, 'id_ID');
-		foreach($data as $row):
+		setlocale (LC_TIME, 'id_ID');$id;$nama;$jenis_pembayaran;$alamat;$status;
+		foreach($data as $row){
+			$id = $row->id;
+			$nama = $row->nama;
+			$jenis_pembayaran = $row->jenis_pembayaran;
+			$alamat = $row->alamat;
+			$status = $status;
+			break;
+		}
 		?>
-		<p>Order ID :<b> <?php echo $row->ID?></b></p>
-		<p>Nama Pembeli : <b><?php echo $row->nama_pembeli?></b></p>
+		<p>Order ID :<b> <?php echo $id?></b></p>
+		<p>Nama Pembeli : <b><?php echo $nama?></b></p>
 		<table class="table table-dark">
 
 				<thead>
@@ -25,26 +32,24 @@
     				</tr>
   				</thead>
 				  <tbody>
+				  <?php foreach($data as $row):?>
 				  	<tr>
 						<td><b><?php echo $row->nama_barang?></b></td>
 						<td><b><?php echo $row->jumlah_beli?></b></td>
-						<td><b><?php echo 'IDR '.number_format($row->total_harga)?></b></td>
+						<td><b><?php echo 'IDR '.number_format($row->jumlah_beli * $row->harga)?></b></td>
 					</tr>
+				<?php endforeach;?>
 					<tr>
 						<td colspan="2">Alamat</td>
-						<td><b><?php echo $row->alamat?></b></td>
-					</tr>
-					<tr>
-						<td colspan="2">Pengiriman</td>
-						<td><b>JNE</b></td>
+						<td><b><?php echo $alamat?></b></td>
 					</tr>
 					<tr>
 						<td colspan="2">Jenis Pembayaran</td>
-						<td><b><?php echo $row->pembayaran?></b></td>
+						<td><b><?php echo $jenis_pembayaran?></b></td>
 					</tr>
 					<tr>
 						<td colspan="2">Status</td>
-						<td><b><?php if($row->status == 0){
+						<td><b><?php if($status == 0){
 							echo 'BELUM SELESAI';
 						}else{
 							echo 'SELESAI';
@@ -62,6 +67,6 @@
 			<button class="btn btn-success"><a href="<?php echo base_url() . 'public/dashboard/changeStatus/' . $row->ID ?>">CHECKOUT</a></button>
 			</div>
 		</div>
-		<?php endforeach;?>
+
 	</body>
 </html>

@@ -154,7 +154,7 @@
 					?>
 					<tr class='<?php echo $class?>'>
 						<th scope="row"><?=$i?></th>
-						<td><?= $item->ID?></td>
+						<td><?php echo 'B-' . $item->ID?></td>
 						<td><?= $item->nama_barang?></td>
 						<td><?= $item->stok_barang; $i++?></td>
 						<td><button class="btn-primary">Edit</button></td>

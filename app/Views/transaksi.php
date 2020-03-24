@@ -40,7 +40,7 @@
       				<small><b><?php echo $dat->selisih_waktu?></b> days ago</small>
     			</div>
     			<p class="mb-1"><?php echo 'Nama : ' .$dat->nama_barang?></p>
-    			<small><?php echo 'Jumlah Beli : ' . $dat->jumlah_beli?></small>
+    			<small><?php echo 'Total Harga : ' . $dat->total_harga?></small>
   			</a>
 			<?php endforeach;?>
 			</div>
