@@ -2,11 +2,13 @@
 use App\Models\Barang;
 use App\Models\Transaksi;
 use App\Models\Login;
+use App\Models\User;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use App\Config\Encryption;
 $model = null;
 $model_login = null;
+$model_user = null;
 $transaksi = null;
 $encrypter = null;
 $message = null;
@@ -17,6 +19,7 @@ class Dashboard extends BaseController{
 		helper('form');
 		$this->model = new Barang();
 		$this->model_login = new Login();
+		$this->model_user = new User();
 		$this->transaksi = new Transaksi();
 		$this->encrypter = \Config\Services::encrypter();
 	}
@@ -122,6 +125,54 @@ class Dashboard extends BaseController{
 		$row = $this->model->check();
 		$detail_transaksi = $this->transaksi->detail_transaksi($id);
 		echo view('dashboard',['row' => $row,'notif'=>$detail_transaksi,'jumlah_barang_terjual' => $data_barang_terjual[0]->nilai]);
+	}
+	public function user(){
+		$result = $this->model_user->show();
+		echo view('user',['data' => $result]);
+	}
+	public function gantiStatusUser(){
+		$id;$status;
+		if(isset($_POST['id'])){
+			$id =  $_POST['id'];
+		}
+		if(isset($_POST['status'])){
+			$status= $_POST['status'];
+		}
+		$result = $this->model_user->update($id,$status);
+		if($result == false){
+			$message = 'Gagal mengupdate!';
+			$result = $this->model_user->show();
+			echo view('user',['data' => $result,'message' => $message]);
+		}
+	}
+	public function addItem(){
+		$namaItem;$kodeItem;$stok;$hargaPokok;$hargaLevel1;$hargaLevel2;$satuan;
+		if(isset($_POST['namaItem'])){
+			$namaItem = $_POST['namaItem'];
+		}
+		if(isset($_POST['kodeItem'])){
+			$kodeItem = $_POST['kodeItem'];
+		}
+		if(isset($_POST['stok'])){
+			$stok = $_POST['stok'];
+		}
+		if(isset($_POST['hargaPokok'])){
+			$hargaPokok = $_POST['hargaPokok'];
+		}
+		if(isset($_POST['hargaLevel1'])){
+			$hargaLevel1 = $_POST['hargaLevel1'];
+		}
+		if(isset($_POST['hargaLevel2'])){
+			$hargaLevel2 = $_POST['hargaLevel2'];
+		}
+		if(isset($_POST['satuan'])){
+			$satuan = $_POST['satuan'];
+		}
+		$result = $this->model->addBarang($namaItem,$kodeItem,$stok,$hargaPokok,$hargaLevel1,$hargaLevel2,$satuan);
+		if($result === FALSE){
+			echo "<script>alert('Error!')</script>";
+			return FALSE;
+		}
 	}
 }
 ?>

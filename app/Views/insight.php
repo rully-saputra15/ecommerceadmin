@@ -19,7 +19,7 @@
 						<a class="nav-link" href="<?php echo base_url(). 'public/dashboard/transaksi'?>">Transaksi</span></a>
 					</li>
       				<li class="nav-item">
-        				<a class="nav-link" href="#">Users</a>
+        				<a class="nav-link" href="<?php echo base_url(). 'public/dashboard/user'?>">Users</a>
       				</li>
     		</ul>
   		</div>

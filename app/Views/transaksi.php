@@ -19,7 +19,7 @@
 						<a class="nav-link" href="<?php echo base_url(). 'public/dashboard/transaksi'?>">Transaksi</span></a>
 					</li>
       				<li class="nav-item">
-        				<a class="nav-link" href="#">Users</a>
+        				<a class="nav-link" href="<?php echo base_url(). 'public/dashboard/user'?>">Users</a>
       				</li>
     		</ul>
   		</div>
@@ -39,7 +39,7 @@
       				<h5 class="mb-1"><?php $date = date_create($dat->waktu);echo date_format($date,"D , d-M-y H:i")?></h5>
       				<small><b><?php echo $dat->selisih_waktu?></b> days ago</small>
     			</div>
-    			<p class="mb-1"><?php echo 'Nama : ' .$dat->nama_barang?></p>
+    			<p class="mb-1"><?php echo 'Nama : ' .$dat->nama?></p>
     			<small><?php echo 'Total Harga : ' . $dat->total_harga?></small>
   			</a>
 			<?php endforeach;?>

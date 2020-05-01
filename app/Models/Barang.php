@@ -15,11 +15,14 @@ class Barang {
 	public function updt($sql){
 
 		$array = [
-			'nama_barang' => $sql[3],
-			'jumlah_terjual' => $sql[4],
-			'stok_barang' => $sql[5],
-			'harga' => $sql[6],
-			'berat' => $sql[7]
+			'kode_item' => $sql[0],
+			'nama_barang' => $sql[1],
+			'merk' => $sql[2],
+			'satuan' => $sql[3],
+			'harga_pokok' => $sql[4],
+			'harga_level_1' => $sql[5],
+			'harga_level_2' => $sql[6],
+			'stok_barang' => $sql[7]
 		];
 		$this->$builder->set($array);
 
@@ -28,13 +31,19 @@ class Barang {
 		// $builder->set('stok_barang',$sql[4]);
 		// $builder->set('harga',$sql[5]);
 		// $builder->set('berat',$sql[6]);
-		$this->$builder->where('ID',$sql[1]);
+		$this->$builder->where('nama_barang',$sql[1]);
 		$this->$builder->update();
 	}
-	public function addBarang($nama_barang,$foto_barang,$harga,$stok,$kondisi,$deskripsi)
+	public function addBarang($namaItem,$kodeItem,$stok,$hargaPokok,$hargaLevel1,$hargaLevel2,$satuan)
 	{
-		$query = $this->db->query("INSERT INTO barang(foto,nama_barang,jumlah_terjual,stok_barang,harga,berat,kondisi,deskrpsi,rating) VALUES('$foto_barang','$nama_barang',0,$stok,$harga,50,'BARU','$deskripsi',0)");
-		return $query->error();
+		$this->db->transStart();
+		$this->db->query("INSERT INTO Barang(kode_item,nama_barang,stok_barang,harga_pokok,harga_level_1,harga_level_2,satuan,merk) VALUES('$kodeItem','$namaItem','$stok','$hargaPokok','$hargaLevel1','$hargaLevel2','$satuan','$merk')");
+		$this->db->transComplete();
+		if($this->db->transStatus() === FALSE)
+		{
+			$this->db->trans_rollback();
+			return FALSE;
+		}
 	}
 
 }

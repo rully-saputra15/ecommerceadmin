@@ -31,7 +31,10 @@ class Transaksi {
 	}
 	public function detail_transaksi($id)
 	{
-		$query = $this->db->query("SELECT CONCAT('T',a.ID) 'id' , d.nama_barang 'nama_barang',c.nama 'nama',c.alamat 'alamat', b.jumlah_beli 'jumlah_beli', a.jenis_pembayaran 'jenis_pembayaran',a.status 'status',d.harga 'harga'
+		$query = $this->db->query("SELECT a.ID 'id' , d.nama_barang 'nama_barang',c.nama 'nama',c.alamat 'alamat', b.jumlah_beli 'jumlah_beli', a.jenis_pembayaran 'jenis_pembayaran',a.status 'status',(CASE
+		WHEN a.status_user = 0 THEN d.harga_pokok
+		WHEN a.status_user = 1 THEN d.harga_level_1
+		ELSE  d.harga_level_2 END) 'harga',d.satuan 'satuan',a.total_harga 'total_harga'
 		FROM transaksi a, transaksi_detail b, users c , barang d
 		WHERE a.ID = b.ID_transaksi
 		AND a.ID_user = c.ID
