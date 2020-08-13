@@ -72,7 +72,6 @@ class Dashboard extends BaseController{
 			$deskripsi = $_POST['deskripsi'];
 
 			$addBarang = $this->model->addBarang($nama_barang,$foto_barang,$harga,$stok,$kondisi,$deskripsi);
-			print_r($addBarang);
 		}
 	}
 	public function upload()
@@ -145,6 +144,9 @@ class Dashboard extends BaseController{
 			echo view('user',['data' => $result,'message' => $message]);
 		}
 	}
+	public function viewAddItem(){
+		echo view('add_item');
+	}
 	public function addItem(){
 		$namaItem;$kodeItem;$stok;$hargaPokok;$hargaLevel1;$hargaLevel2;$satuan;
 		if(isset($_POST['namaItem'])){
@@ -173,6 +175,78 @@ class Dashboard extends BaseController{
 			echo "<script>alert('Error!')</script>";
 			return FALSE;
 		}
+		$this->index();
+	}
+	public function itemDetail(){
+		try{
+			$id;
+			if($_POST['id']){
+				$id = $_POST['id'];
+			}
+			if(isset($id)){
+				$result = $this->model->get_search_barang($id);
+				echo json_encode($result->getResult('array'));
+			} else {
+				echo 'error';
+			}
+		} catch(\Exception $e){
+			alert($e);
+		}
+
+	}
+	public function coba(){
+		echo 'halo';
+	}
+	public function editItemDetail(){
+		$id;$namaItem;$kodeItem;$stok;$hargaPokok;$hargaLevel1;$hargaLevel2;$satuan;$foto;$merk;
+		if(isset($_POST['ID'])){
+			$id = $_POST['ID'];
+		}
+		if(isset($_POST['namaItem'])){
+			$namaItem = $_POST['namaItem'];
+		}
+		if(isset($_POST['kodeItem'])){
+			$kodeItem = $_POST['kodeItem'];
+		}
+		if(isset($_POST['stok'])){
+			$stok = $_POST['stok'];
+		}
+		if(isset($_POST['hargaPokok'])){
+			$hargaPokok = $_POST['hargaPokok'];
+		}
+		if(isset($_POST['hargaLevel1'])){
+			$hargaLevel1 = $_POST['hargaLevel1'];
+		}
+		if(isset($_POST['hargaLevel2'])){
+			$hargaLevel2 = $_POST['hargaLevel2'];
+		}
+		if(isset($_POST['satuan'])){
+			$satuan = $_POST['satuan'];
+		}
+		if(isset($_POST['foto'])){
+			$foto = $_POST['foto'];
+		}
+		if(isset($_POST['merk'])){
+			$merk = $_POST['merk'];
+		}
+		$data = [
+			'id' => intval($id),
+			'namaItem' => $namaItem,
+			'kodeItem' => $kodeItem,
+			'stok' => intval($stok),
+			'hargaPokok' => intval($hargaPokok),
+			'hargaLevel1' => intval($hargaLevel1),
+			'hargaLevel2' => intval($hargaLevel2),
+			'satuan' => $satuan,
+			'merk' => $merk,
+			'foto' => $foto
+		];
+		$result = $this->model->updtItem($data);
+		if($result === FALSE){
+			echo "<script>alert('Error!')</script>";
+			return FALSE;
+		}
+		$this->index();
 	}
 }
 ?>

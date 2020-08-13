@@ -34,10 +34,21 @@ class Barang {
 		$this->$builder->where('nama_barang',$sql[1]);
 		$this->$builder->update();
 	}
-	public function addBarang($namaItem,$kodeItem,$stok,$hargaPokok,$hargaLevel1,$hargaLevel2,$satuan)
-	{
+	public function updtItem($data){
 		$this->db->transStart();
-		$this->db->query("INSERT INTO Barang(kode_item,nama_barang,stok_barang,harga_pokok,harga_level_1,harga_level_2,satuan,merk) VALUES('$kodeItem','$namaItem','$stok','$hargaPokok','$hargaLevel1','$hargaLevel2','$satuan','$merk')");
+		$array = [
+			'kode_item' => $data['kodeItem'],
+			'nama_barang' => $data['namaItem'],
+			'merk' => $data['merk'],
+			'satuan' => $data['satuan'],
+			'harga_pokok' => $data['hargaPokok'],
+			'harga_level_1' => $data['hargaLevel1'],
+			'harga_level_2' => $data['hargaLevel2'],
+			'stok_barang' => $data['stok']
+		];
+		$this->$builder->set($array);
+		$this->$builder->where('ID',$data['id']);
+		$this->$builder->update();
 		$this->db->transComplete();
 		if($this->db->transStatus() === FALSE)
 		{
@@ -45,6 +56,20 @@ class Barang {
 			return FALSE;
 		}
 	}
-
+	public function addBarang($namaItem,$kodeItem,$stok,$hargaPokok,$hargaLevel1,$hargaLevel2,$satuan)
+	{
+		$this->db->transStart();
+		$this->db->query("INSERT INTO barang(kode_item,nama_barang,stok_barang,harga_pokok,harga_level_1,harga_level_2,satuan,merk) VALUES('$kodeItem','$namaItem','$stok','$hargaPokok','$hargaLevel1','$hargaLevel2','$satuan','$merk')");
+		$this->db->transComplete();
+		if($this->db->transStatus() === FALSE)
+		{
+			$this->db->trans_rollback();
+			return FALSE;
+		}
+	}
+	public function get_search_barang($id){
+		$res = $this->db->query("SELECT * FROM barang where ID ='$id'");
+		return $res;
+	}
 }
 ?>

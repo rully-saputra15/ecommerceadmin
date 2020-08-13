@@ -31,10 +31,10 @@ class Database extends \CodeIgniter\Database\Config
 	 */
 	public $default = [
 		'DSN'      => '',
-		'hostname' => 'localhost',
+        'hostname' => 'localhost',
 		'username' => 'root',
 		'password' => '',
-		'database' => 'quimtafari',
+		'database' => 'adminecommerce',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
@@ -46,7 +46,7 @@ class Database extends \CodeIgniter\Database\Config
 		'swapPre'  => '',
 		'encrypt'  => false,
 		'compress' => false,
-		'strictOn' => false,
+		'strictOn' => true,
 		'failover' => [],
 		'port'     => 3306,
 	];

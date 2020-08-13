@@ -12,7 +12,6 @@ use CodeIgniter\Database\ConnectionInterface;
 	public function check($username,$password){
 		$query = $this->db->query("SELECT username FROM admin WHERE username='$username' AND password='$password'");
 		return $query->getRow();
-
 	}
  }
 ?>
