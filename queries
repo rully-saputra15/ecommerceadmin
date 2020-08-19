@@ -1,0 +1,32 @@
+// query untuk report bulanan
+
+SELECT DATE_FORMAT(b.waktu,"%M-%Y") AS Waktu ,SUM(b.total_harga) "Total Penjualan"
+FROM barang a, transaksi b , transaksi_detail c 
+WHERE a.ID = c.ID_barang
+AND b.ID = c.ID_transaksi
+GROUP BY 1;
+
+// query untuk menampilkan barang yang dijual berdasarkan bulan dan tahun 
+
+SELECT b.waktu as Tanggal,a.nama_barang AS Nama , CASE
+		WHEN b.status_user = 0 THEN a.harga_pokok
+		WHEN b.status_user = 1 THEN a.harga_level_1
+		WHEN b.status_user = 2 THEN a.harga_level_2
+		END as Harga , c.jumlah_beli as Jumlah , CASE
+		WHEN b.status_user = 0 THEN a.harga_pokok * c.jumlah_beli
+		WHEN b.status_user = 1 THEN a.harga_level_1 * c.jumlah_beli
+		WHEN b.status_user = 2 THEN a.harga_level_2 * c.jumlah_beli
+		END as Subtotal
+FROM barang a, transaksi b , transaksi_detail c
+WHERE a.ID = c.ID_barang
+AND b.ID = c.ID_transaksi
+AND MONTH(b.waktu) = '8'
+AND YEAR(b.waktu) = '2020'
+
+
+//baca transaksi by ID
+
+SELECT b.nama_barang as nama_barang, b.harga_level_1 as harga , a.jumlah_beli as jumlah_beli
+FROM transaksi_detail a, barang b
+WHERE a.ID_barang = b.ID
+AND ID_transaksi = '1';

@@ -44,7 +44,8 @@ class Barang {
 			'harga_pokok' => $data['hargaPokok'],
 			'harga_level_1' => $data['hargaLevel1'],
 			'harga_level_2' => $data['hargaLevel2'],
-			'stok_barang' => $data['stok']
+			'stok_barang' => $data['stok'],
+			'foto' => $data['foto']
 		];
 		$this->$builder->set($array);
 		$this->$builder->where('ID',$data['id']);

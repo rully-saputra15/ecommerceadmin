@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 	<head>
+	<title>Sistem Warehouse</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>asset/css/bootstrap.min.css">
@@ -36,7 +37,6 @@
 							var harga_level_2 = data[0].harga_level_2;
 							var merk = data[0].merk;
 							var satuan = data[0].satuan;
-							console.log(idItem);
 							modal.find('#ID').val(idItem);
 							modal.find('#kodeItem').val(kode_item);
 							modal.find('#merk').val(merk);
@@ -60,8 +60,28 @@
 					return false;
 				});
 				$("#editItem").submit(function(event){
-					submitFormEditItem();
-					return false;
+					event.preventDefault();
+				//data: $('form#editItem').serialize(),
+				var url = <?php echo json_encode(base_url() . 'public/dashboard/editItemDetail?')?>;
+				$.ajax({
+					type: "POST",
+					url: url,
+					processData:false,
+					contentType:false,
+					cache:false,
+					async:false,
+					data: new FormData(this),
+					success: function(response){
+						$("#editItemModal").modal('hide');
+						alert("Success!");
+						location.reload();
+					},
+					error: function(xhr){
+						$("#editItemModal").modal('hide');
+						console.log(xhr);
+						alert("Error!");
+					}
+				});
 				})
 			});
 			function submitForm(){
@@ -81,20 +101,24 @@
 					}
 				});
 				}
-			function submitFormEditItem(){
+			function submitFormEditItem(ev){
+				ev.preventDefault();
+				//data: $('form#editItem').serialize(),
 				var url = <?php echo json_encode(base_url() . 'public/dashboard/editItemDetail?')?>;
 				$.ajax({
 					type: "POST",
 					url: url,
-					cache: false,
-					data: $('form#editItem').serialize(),
+					data: new FormData(this),
+					processData:false,
+					contentType:false,
+					cache:false,
+					async:false,
 					success: function(response){
-						console.log(response);
 						$("#editItemModal").modal('hide');
 						alert("Success!");
 						location.reload();
 					},
-					error: function(){
+					error: function(xhr){
 						$("#editItemModal").modal('hide');
 						alert("Error!");
 					}
@@ -120,7 +144,7 @@
 		<div class="collapse navbar-collapse" id="navbarNav">
     		<ul class="navbar-nav ml-auto">
       				<li class="nav-item active">
-        				<a class="nav-link" href="<?php echo base_url() . 'public/dashboard/insight'?>">Insight <span class="sr-only">(current)</span></a>
+        				<a class="nav-link" href="<?php echo base_url() . 'public/dashboard/showReport'?>">Report</a>
       				</li>
 					<li class="nav-item">
 						<a class="nav-link" href="<?php echo base_url(). 'public/dashboard/transaksi'?>">Transaksi</span></a>
@@ -167,7 +191,7 @@
 				<div class="col">
 		  		<form class="form-horizontal" method="post" action="<?php echo base_url(). 'public/dashboard/upload' ?>" name="uploadCSV" enctype="multipart/form-data">
 				  <label><b>Upload file excel untuk mengubah data</b></label>
-			  		<input type="file" name="file" id="file" accept=".xlsx">
+			  		<input type="file" name="file" id="file" accept=".xlsx" required>
 			  		<button class="btn btn-primary" id="submit" name="import">Import</button>
 				</form>
 				</div>
@@ -293,7 +317,7 @@
 				<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form id="editItem" name="editItem" role="form">
+			<form id="editItem" name="editItem" role="form" accept-charset="utf-8" enctype="multipart/form-data">
 			<div class="modal-body">
 
 			<div class="form-group">

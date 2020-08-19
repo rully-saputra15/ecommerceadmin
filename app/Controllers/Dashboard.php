@@ -3,23 +3,28 @@ use App\Models\Barang;
 use App\Models\Transaksi;
 use App\Models\Login;
 use App\Models\User;
+use App\Models\Report;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use App\Config\Encryption;
+use CodeIgniter\HTTP\IncomingRequest;
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\Files\UploadedFile;
 $model = null;
 $model_login = null;
 $model_user = null;
+$model_report = null;
 $transaksi = null;
 $encrypter = null;
 $message = null;
 class Dashboard extends BaseController{
-
 	public function __construct(){
 		//parent::__construct();
 		helper('form');
 		$this->model = new Barang();
 		$this->model_login = new Login();
 		$this->model_user = new User();
+		$this->model_report = new Report();
 		$this->transaksi = new Transaksi();
 		$this->encrypter = \Config\Services::encrypter();
 	}
@@ -99,9 +104,60 @@ class Dashboard extends BaseController{
 		$detail_transaksi = $this->transaksi->detail_transaksi($id);
 		echo view('detail-transaksi',['data'=>$detail_transaksi]);
 	}
-	public function insight(){
-		$data_insight = $this->transaksi->insight();
-		echo view('insight',['data' => $data_insight]);
+	public function showReport(){
+		echo view('report');
+	}
+	public function showReportData(){
+		$month;$year;
+		if($_POST['month']){
+			$month = $_POST['month'];
+		}
+		if($_POST['year']){
+			$year = $_POST['year'];
+		}
+		if(isset($month) && isset($year)){
+			/*$data = [
+				'month' => $month,
+				'year' => $year
+			];*/
+			$result = $this->model_report->getReportMonth($month,$year);
+			//print_r($result);
+			$output = '<br>';
+			$total = 0;
+			$showTotal = '';
+			$output .= '<table class="table table-bordered">';
+			$output .= '<thead>
+							<tr>
+								<th scope="col">Tanggal</th>
+								<th scope="col">Nama Barang</th>
+								<th scope="col">Jumlah Barang</th>
+								<th scope="col">Subtotal</th>
+							</tr>
+						</thead><tbody>';
+			foreach($result as $data){
+				$output .= '<tr>
+					<td>
+						'.date("H:i:s d-M-Y",strtotime($data->Tanggal)).'
+					</td>
+					<td>
+						'.$data->Nama.'
+					</td>
+					<td>
+					'.$data->Jumlah.'
+					</td>
+					<td>
+					Rp. '.number_format($data->Subtotal).'
+					</td>
+					</tr>';
+					$total = $total + $data->Subtotal;
+			}
+			$showTotal .= '<br><h3 style="text-align:center">Total : Rp. <b>'.number_format($total).'</b></h3>';
+			$output .= '</tbody></table>';
+			$outputFinal = $showTotal . $output;
+			echo $outputFinal;
+		} else {
+			echo 'Mohon masukkan bulan dan tahun';
+		}
 	}
 	public function transaksi()
 	{
@@ -194,11 +250,12 @@ class Dashboard extends BaseController{
 		}
 
 	}
-	public function coba(){
-		echo 'halo';
-	}
 	public function editItemDetail(){
+		$validated = $this->validate([
+            'foto' => 'uploaded[foto]|mime_in[foto,image/jpg,image/jpeg,image/gif,image/png]|max_size[foto,9000]'
+        ]);
 		$id;$namaItem;$kodeItem;$stok;$hargaPokok;$hargaLevel1;$hargaLevel2;$satuan;$foto;$merk;
+		$namaFoto;
 		if(isset($_POST['ID'])){
 			$id = $_POST['ID'];
 		}
@@ -223,11 +280,17 @@ class Dashboard extends BaseController{
 		if(isset($_POST['satuan'])){
 			$satuan = $_POST['satuan'];
 		}
-		if(isset($_POST['foto'])){
+		/*if(isset($_POST['foto'])){
 			$foto = $_POST['foto'];
-		}
+		}*/
 		if(isset($_POST['merk'])){
 			$merk = $_POST['merk'];
+		}
+		if($validated){
+			//$file = $request->getFiles();
+			$foto = $this->request->getFile('foto');
+			$namaFoto = $foto->getName();
+			$foto->move(ROOTPATH . 'public/uploads');
 		}
 		$data = [
 			'id' => intval($id),
@@ -239,7 +302,7 @@ class Dashboard extends BaseController{
 			'hargaLevel2' => intval($hargaLevel2),
 			'satuan' => $satuan,
 			'merk' => $merk,
-			'foto' => $foto
+			'foto' => $namaFoto
 		];
 		$result = $this->model->updtItem($data);
 		if($result === FALSE){
